@@ -1,21 +1,21 @@
 # Club Radar
 
-This is the `bip/club-radar` branch.  The "bip" stands for "Branch of
-Interest-worthy Project".  Club Radar received the most votes as of Monday
-at 3 votes!  The runner-ups were "Minecraft with Computer Vision" and
-"Task Manager".
+This is a Svelte web site over Python WSGI.
+(The details of the backend is subject to change; namely, we
+may switch to Django ORM to make database connectivity easier.)
 
-Merge this branch into master if we ultimately decide to go for this project.
+We use Vercel to deploy the web site.  By using you agree to
+the relevant terms of privacy policy.  See
+<https://team.endfindme.com/wisc/sdc/fa-25/public/privacy-policy>.
 
-See pitch for ideas and stuff: <https://rapidcow.github.io/site-wisc-sdc-fa25-team/ideas/club-radar>
+*   Web site: <https://clubradar.endfindme.com/>
+*   Web docs: [TODO]
 
-## Software Stack
 
-It looks like we are going with SvelteKit above all else...
-(but is a separate backend really necessary?)  Either way, since
-I am definitely not paying anything out of my pocket for this,
-we are going with the only options that can be hosted on Vercel
-(between Flask and FastAPI that is.)
+## License
+
+A license has not been decided for the project.
+
 
 ## Contributing
 
