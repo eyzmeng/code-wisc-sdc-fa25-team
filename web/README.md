@@ -1,95 +1,61 @@
-# sv
+# web - Frontend code
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## Development
 
-## Creating a project
+You should have read HACKING already.
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## METAINFO
-
-This directory was created with the following options:
+Start development server using:
 
 ```
-$ pnpm dlx sv create frontend
-
-┌  Welcome to the Svelte CLI! (v0.9.9)
-│
-◇  Directory not empty. Continue?
-│  Yes
-│
-◇  Which template would you like?
-│  SvelteKit minimal
-│
-◇  Add type checking with TypeScript?
-│  Yes, using TypeScript syntax
-│
-◆  Project created
-│
-◇  What would you like to add to your project? (use arrow keys / space bar)
-│  prettier, eslint, vitest, playwright, sveltekit-adapter
-│
-◇  vitest: What do you want to use vitest for?
-│  unit testing, component testing
-│
-◇  sveltekit-adapter: Which SvelteKit adapter would you like to use?
-│  vercel
-│
-◆  Successfully setup add-ons
-│
-◇  Which package manager do you want to install dependencies with?
-│  pnpm
-│
-◆  Successfully installed dependencies
-│
-◇  Successfully formatted modified files
-│
-◇  What's next? ───────────────────────────────╮
-│                                              │
-│  📁 Project steps                            │
-│                                              │
-│    1: cd frontend                            │
-│    2: pnpm run dev --open                    │
-│                                              │
-│  To close the dev server, hit Ctrl-C         │
-│                                              │
-│  Stuck? Visit us at https://svelte.dev/chat  │
-│                                              │
-├──────────────────────────────────────────────╯
-│
-└  You're all set!
+pnpm dev
+vite dev
 ```
 
-An additional package [`sveletekit-i18n`](https://github.com/sveltekit-i18n/lib) was installed,
-though it might have been a mistake...
+By default, Vite binds to the loopback interface on port 5173.
+If it cannot bind to that, it will try 5714, and I guess it would
+try 5715 next, and... I don't know.  I haven't tried that much.
+
+Take port 5173 for example.  You want to access <http://localhost:5173/>.
+(The host name is very significant.  **Do not use 127.0.0.1**.)
+
+You can override these using `--host [host]` and `--port [port]`.
+
+
+## Structure
+
+Frontend HTML/CSS people, work on `src/lib/mod`,
+which are concerned with UI components.
+
+Frontend JavaScript people, work on `src/lib/sub`,
+which are concerned with implementing these components.
+
+*To frontend programmers (JavaScript) that is*:
+You can use the `src/lib/debug/Console.svelte` component to
+display debug messages.  Example:
+
+```svelte
+<script lang="ts">
+  import { strbuf } from '$lib/debug/conctl';
+  import Console from '$lib/debug/Console.svelte';
+</script>
+
+<button on:click={() => strbuf.set("Hello World")}>Press me</button>
+<Console />
+```
+
+(You can also use the real JavaScript console in your
+DevTools panel if you know what that is.)
+
+Use `getenv` from `src/lib/api/etc/environ.ts` to obtain dynamic
+environment variables.  The `getenv('API_BASE_URL')` is
+what you should use for the base URL of the API.
+To get a greeting, for instance, you'd write:
+
+```svelte
+<script lang="ts">
+   import { getenv } from '$lib/debug/etc/environ';
+   const url = `${getenv('API_BASE_URL')}v1/greet`;
+   fetch($url).then(res => res.json()).then(payload => do_something(payload))
+     .catch(err => console.error(`Bad ${url}!`, err));
+</script>
+```

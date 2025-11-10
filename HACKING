@@ -120,7 +120,7 @@ This runs it on port 8000.  Though you may choose a different port:
 To get the full command usage, pass -h:
 
     $ poetry run python -m app -h
-    usage: __main__.py [-h] [-d] [-b B] [port]
+    usage: __main__.py [-h] [-d] [-b BIND] [--cors] [port]
 
     positional arguments:
       port        listening port (default: 8000)
@@ -129,3 +129,38 @@ To get the full command usage, pass -h:
       -h, --help  show this help message and exit
       -d          enable debug (default: False)
       -b BIND     bind address (default: 127.0.0.1)
+      --cors      allow Cross-Origina Requests (default: False)
+
+***--> Running frontend AND backend
+
+CORS is nasty.  You have two option:
+
+    Option 1:  Reverse proxy from Vite to backend.
+
+        In one terminal:         |          In another terminal:
+     ----------------------------+-----------------------------------------
+        pnpm run dev             |          poetry run python -m app
+
+    This lets you run the web site as if <http://localhost:5173/>
+    served both the frontend and the backend.  WORKING THIS WAY IS
+    ENCOURAGED.  Frontend people: If you choose not to do it this
+    way (because you don't have Python installed or don't want to
+    install it?) modify vite.config.ts so that /api is proxied from
+        https://clubradar.endfindme.com
+    instead.
+
+    Option 2:  Reverse proxy both frontend and backend from
+    a separate WSGI.
+
+    You need to install Werkzurg for this.  Go ahead and install the
+    development dependencies.
+
+        poetry install --with devel
+
+    You'll need to 
+
+        In one terminal:         |          In another terminal:
+     ----------------------------+-----------------------------------------
+        pnpm run dev             |          poetry run bin/httpd
+
+    Now the site should be accessible at <http://localhost:8000/>.

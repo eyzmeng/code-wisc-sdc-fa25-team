@@ -1,2 +1,6 @@
-<h1>Welcome to Club Radar by Team 17 &amp; 11</h1>
-<p>Visit <a href="https://github.com/SDC-Fall-2025/Team-17-Club-Radar">GitHub</a> for our source code!</p>
+<script lang="ts">
+  import Search from '$lib/mod/Search.svelte';
+</script>
+
+<h1 class="text-3xl text-center font-bold mt-4 mb-6">Club Radar!</h1>
+<Search />
