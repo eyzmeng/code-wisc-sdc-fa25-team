@@ -1,20 +1,22 @@
-# [Insert Project Name]
+# Club Radar
 
-We are down to our **finalists**!
+This is a Svelte web site over Python WSGI.
+(The details of the backend is subject to change; namely, we
+may switch to Django ORM to make database connectivity easier.)
 
-* [Club radar](https://rapidcow.github.io/site-wisc-sdc-fa25-team/ideas/club-radar) [3 votes]
-* [Task manager](https://rapidcow.github.io/site-wisc-sdc-fa25-team/ideas/task-manager) [2 votes]
-* [Minecraft with Computer Vision](https://rapidcow.github.io/site-wisc-sdc-fa25-team/ideas/minecraft-cv) [3 votes]
+We use Vercel to deploy the web site.  By using you agree to
+the relevant terms of privacy policy.  See
+<https://team.endfindme.com/wisc/sdc/fa-25/public/privacy-policy>.
 
-I will be adding some base code for each finalist
-in a BIP (Branch of Interest-worthy Project):
+*   Web site: <https://clubradar.endfindme.com/>
+*   Web docs: [TODO]
 
-* [bip/task-manager](https://github.com/SDC-Fall-2025/Team-17-Project/tree/bip/task-manager)
-  (tentative stack: Kotlin with SQLite, develop in [Android Studio](https://developer.android.com/studio))
-* [bip/club-radar](https://github.com/SDC-Fall-2025/Team-17-Project/tree/bip/club-radar)
-  (SvelteKit over Flask, live at [clubradar.endfindme.com](https://clubradar.endfindme.com/api/v1/greet))
-* [bip/minecraft-cv](https://github.com/SDC-Fall-2025/Team-17-Project/tree/bip/minecraft-cv)
-  (OpenCV Python)
 
-We will probably meet sometime this week, so hopefully
-by then we can go with a project and get started for real.
+## License
+
+A license has not been decided for the project.
+
+
+## Contributing
+
+Read [HACKING](../HACKING)

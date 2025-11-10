@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+use FindBin;
+use File::Spec;
+my $ins_dir = File::Spec->catfile($FindBin::Bin, 'install.d');
+opendir my $ins_dih, $ins_dir or die "opendir $ins_dir: $!\n";
+foreach (grep { /\Q.install\E$/ } map File::Spec->catfile($ins_dir, $_), File::Spec->no_upwards(readdir $ins_dih)) {
+	# fake exec because we are evil >:))))
+	local $0 = $_; unless (my $return = do($_)) {
+		die "could not do $_:\n", $@ if $@;
+	}
+}
+close $ins_dih;

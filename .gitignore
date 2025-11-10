@@ -1,0 +1,227 @@
+
+##****---> Node.js
+node_modules/
+# In the (very weird) scenario that the worktree is at the root
+# of a FS, /.pnpm-store/ would be created.  I can't imagine a
+# scenario where this would happen but here you go anyways...
+# <https://github.com/orgs/pnpm/discussions/6936>
+#   <https://pnpm.io/settings#storedir>
+#   <https://github.com/creatorsgarten/techcal.dev/pull/108>
+#     <https://github.com/creatorsgarten/techcal.dev/commit/7950f60c0622bc969dc880e37f054f587b048e2f>
+.pnpm-store/
+# On the other hand, virtual-store-dir lives in node_modules/.pnpm
+# That means we *probably* shouldn't have to explicitly ignore it,
+# but add it for completeness anyways.
+# <https://pnpm.io/settings#virtualstoredir>
+.pnpm/
+
+##****---> Python
+# pyenv local
+.python-version
+# poetry config --local
+poetry.toml
+
+# Cache 6_6
+*.py[cod]
+
+# Common virtual environment names
+# <https://stackoverflow.com/a/69084457>
+# <https://docs.python.org/3/tutorial/venv.html#creating-virtual-environments>
+venv
+.venv
+
+##****---> Secrets
+
+.env
+.env.local
+.env.production
+
+##****---> My stuff!
+# prove TAP harness state
+.prove
+
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+##@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@###
+####@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#####
+#####@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@######
+#####@  END OF ESSENTIAL RULES. The following rules are provided   @######
+#####@  for convenience. They should be "obvious" in that anyone   @######
+#####@  who is conscious about the tools they use should exclude   @######
+#####@  these files  from version control  by configuring  their   @######
+#####@  local gitignore rules (either with core.excludesFile, or   @######
+#####@  $GIT_DIR/info/exclude), or just don't git-add(1) them in   @######
+#####@  the first place.  Having suffered through  the hell that   @######
+#####@  is CS400, I can confidently say that it will happen with   @######
+#####@  certainty that *someone* will happily commit these files   @######
+#####@  were they  not to be explicitly listed  in a repository-   @######
+#####@  wide gitignore. Hence the following rather verbose rules.  @######
+#####@      (sorry, but someone's gotta keep the garbage out! ;P)  @######
+#####@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@######
+####@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#####
+##@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@###
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+
+##****---> Obvious OS-specific garbage
+# "Mac turd" as coined by <https://apple.stackexchange.com/a/14981>
+# (Note that ._* should not appear in APFS, though it would on HFS.)
+.DS_Store
+._*
+__MACOSX/
+
+### Toptal.com's macos template ###
+# More from <https://www.toptal.com/developers/gitignore/> (thanks!)
+# (also gets redirected from <https://gitignore.io/> apparently)
+# NOTE NOTE!!!  If you open this file as a Unix line-feed delimited
+# text file, this would show "Icon^M^M" (that is two carriage returns)
+# But if you have used MacOS, you might know that the file is actually
+# named 'Icon\r' with one carriage return (or more (in)famously "Icon?")
+# it's because Git interprets the CRLF sequence as a DOS newline. [*]
+# (Why pre-OSX Mac OS uses CR as line terminators, as well as why
+# they use colons for path component separators instead of either
+# the DOS "\" or the URI / Unix "/", is something well beyond me
+# and the scope of this comment.)
+#
+# [ On the other hand, once upon a time of dinasours, EBCDIC used
+# something called NL (newline) to represent the equivalent of the
+# CR+LF sequence used by TELNET and friends, and to represent it
+# the ISO standards mapped it into NEL (U+0085, next line).  Now I
+# don't like Apple's rebellion, but at least we know they were not
+# the ONLY rebel in the room. :) ]
+#
+# See: <https://stackoverflow.com/a/30755378/19411800>
+#      <https://stackoverflow.com/a/33974028/19411800> [*]
+#      <https://superuser.com/q/298785/2641288>
+#      <https://superuser.com/a/439443/2641288>
+#      <https://eclecticlight.co/2023/03/04/custom-finder-icons-resources-and-mac-os-history/>
+# And marginally related:
+#      <https://www.reddit.com/r/ProgrammerHumor/comments/7mbbdl/comment/drtpif4/>
+#      <https://stackoverflow.com/a/1761086/19411800>
+#      <https://en.wikipedia.org/wiki/Newline#History>
+#      <https://www.rfc-editor.org/old/EOLstory.txt>
+##### Icon^M^M^J <<<
+Icon
+##### >>> Icon^M^M^J
+.AppleDouble
+.LSOverride
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+# iCloud generated files
+*.icloud
+
+### Toptal.com's windows template ###
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+# Dump file
+*.stackdump
+# Folder config file
+[Dd]esktop.ini
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+# Windows shortcuts
+*.lnk
+
+##****---> IDE
+# https://gist.github.com/GhostofGoes/94580e76cd251972b15b4821c8a06f59
+.vscode/
+.idea/
+# Probably overkill
+# <https://stackoverflow.com/a/29998583/19411800>
+#.idea_modules/
+
+##****---> Vim
+# https://github.com/github/gitignore/blob/main/Global/Vim.gitignore
+# If you do not set 'directory', they are created in the current directory.
+# See ":help swap-file" in recover.txt.  Also see
+# <https://stackoverflow.com/a/38023956>
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+# Vim backup and undo files respectively.  Just in case some-
+# one is evil enough to create them in the CURRENT directory?
+*~
+*.un~
+### I don't think anyone is insane enough to bring these into here.
+# .netrwhist
+
+##****---> Emacs
+# https://github.com/github/gitignore/blob/main/Global/Emacs.gitignore
+# I personally don't use Emacs so I'll just take the ones I found in
+# <https://stackoverflow.com/q/52391883/19411800>... (apparently
+# #*#'s are the Auto Save Files while the .#*#'s the File Locks.)
+.\#*
+\#*\#
+
+##****---> ( misc )
+# Generic backup suffixes
+*.bak
+*.old
+### In case anyone tries to resolve merge conflicts
+### (even though i said you don't have to do it...)
+# *.orig files are created after conflict resolution.
+# See mergetool.keepBackup in git-config(1),
+# "TEMPORARY FILES" in git-mergetool(1), and
+# <https://stackoverflow.com/a/37472341/19411800>.
+*.orig
+# Rebase files look like:
+#     README_BACKUP_911459.md
+#     README_BASE_911459.md
+#     README_LOCAL_911459.md
+#     README_REMOTE_911459.md
+# though at some point (at least in Dec 2012)
+# it might have looked like:
+#     index.shtml.BACKUP.16908.shtml
+#     index.shtml.BASE.16908.shtml
+#     index.shtml.LOCAL.16908.shtml
+#     index.shtml.REMOTE.16908.shtml
+# (See <https://stackoverflow.com/q/14044765/19411800> and
+# <https://forum.upcase.com/t/git-rebase-and-leftover-files/2476>
+# for examples) ????  I am very confused.  But let me
+# just try my best to ignore them as much as I can.
+*[._]BACKUP[._]*
+*[._]BASE[._]*
+*[._]LOCAL[._]*
+*[._]REMOTE[._]*
+
+# Andrew File System: "... '.__afs####' names are created when a file is
+# deleted while another (or the same) process is still writing to it.
+# This is then normally cleaned up at the time the process which had it
+# open closes it.  Example:
+#     rm: cannot remove `chen_top//.__afs2EC2': Device or resource busy
+#     rm: cannot remove `chen_top//.__afsBBFE': Device or resource busy
+# <https://twiki.cern.ch/twiki/bin/view/Main/LxplusProblem#AFS_directories_with_name_afs>
+#
+# In CS400 (Spring 2025), some people have run into the same issue when
+# working on a weekly activity (which was involved with using Git on the
+# CSL machines over SSH):
+#     warning: failed to remove .__afsA9DD: Device or resource busy
+#     warning: failed to remove .__afsC843: Device or resource busy
+#     warning: failed to remove .__afsD94: Device or resource busy
+#
+#     Fast-forwarding to: feature
+#     error: Untracked working tree file '.__afsC843' would be overwritten by merge.
+#     Merge with strategy octopus failed.
+# <https://piazza.com/class/m5x25kjamnl2rk/post/897>
+.__afs*
+
