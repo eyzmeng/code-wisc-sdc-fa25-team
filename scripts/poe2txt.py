@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*
 #
-# scripts/poe2txt.py - Poetry.toml to requirements.txt
+# scripts/poe2txt.py - poetry.lock to requirements.txt
 #
 # A hopefully cross-platform script for... whatever.
 # I forgot what I was going to say, but this trick keeps

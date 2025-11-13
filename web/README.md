@@ -54,7 +54,7 @@ To get a greeting, for instance, you'd write:
 ```svelte
 <script lang="ts">
    import { getenv } from '$lib/debug/etc/environ';
-   const url = `${getenv('API_BASE_URL')}v1/greet`;
+   const url = `${getenv('API_BASE_URL')}/v1/greet`;
    fetch($url).then(res => res.json()).then(payload => do_something(payload))
      .catch(err => console.error(`Bad ${url}!`, err));
 </script>
