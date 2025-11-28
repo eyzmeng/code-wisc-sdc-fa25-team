@@ -1,5 +1,4 @@
 import datetime
-import flask
 import json
 import sqlalchemy
 
@@ -76,6 +75,7 @@ class App(object):
         return payload
 
     def to_flask_app(self):
+        import flask
         app = flask.Flask(self.name)
 
         @app.route('/api/v1/greet')

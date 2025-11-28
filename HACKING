@@ -133,7 +133,7 @@ To get the full command usage, pass -h:
 
 ***--> Running frontend AND backend
 
-CORS is nasty.  You have two option:
+CORS is nasty.  You have two options:
 
     Option 1:  Reverse proxy from Vite to backend.
 
@@ -157,7 +157,7 @@ CORS is nasty.  You have two option:
 
         poetry install --with devel
 
-    You'll need to 
+    You'll need to:
 
         In one terminal:         |          In another terminal:
      ----------------------------+-----------------------------------------

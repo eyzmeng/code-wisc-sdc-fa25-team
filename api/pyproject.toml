@@ -2,6 +2,7 @@
 name = "wisc-club-radar-app"
 version = "0.0.0"
 description = "club radar api backend"
+license = "MIT"
 authors = [
     {name = "Ethan Meng",email = "uwisc@endfind.me"}
 ]

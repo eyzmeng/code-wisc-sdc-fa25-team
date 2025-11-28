@@ -1,7 +1,7 @@
 {
   "name": "wisc-club-radar",
   "version": "0.0.0",
-  "description": "win.wisc.edu with better query abilities",
+  "description": "win.wisc.edu with worse query abilities",
   "keywords": [
     "svelte",
     "flask"
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/SDC-Fall-2025/Team-17-Project.git"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "private": true,
   "author": "Team 17/11 <wisc-sdc-fa25-team@list.rapidcow.org>",
   "contributers": [
