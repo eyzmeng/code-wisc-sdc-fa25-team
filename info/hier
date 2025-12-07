@@ -1,0 +1,290 @@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+* info/hier - git vcs repository infrastructure *
+*                                               *
+*                 presented by ... ...          *
+*        ^__^                                   *
+* %  __.-(o<)          Ethan Yizheng Meng       *
+*  \/    (__)    <ethan [at] rapidcow.org>!     *
+*  (______)_/                                   *
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+[[ This FILE is mirrored from `site/guide/hacker/infra.txt'.
+   Remarks about where they live on GitHub are irrelevant. ]]
+
+All repositories live on github.com.
+(prepend https:// for HTTP access and git: for SSH access.)
+
+Jargon aside: "head refs" are what people typically call branches.
+"note refs" are Git notes refs that live inside "refs/notes/*".
+
+     SDC-Fall-2025/Team-17-Club-Radar
+     eyzmeng/code-wisc-sdc-fa25-team
+        head refs:
+           master        (development branch)
+           bip/*         (Branches of Interest-Worthy Project)
+                          [[P.S.: actually secretly named after
+                                  GibThom's sidekick named Bip]]
+        note refs:
+           amlog         (Message-Id of the final pull request
+                          revision this patch was merged from.)
+           commits       (my personal notes dump for anything that i
+                          would put in the body of a commit message
+                          if GitHub weren't such an annoying freak
+                           (also for when --amend'ing a commit that
+                            i don't want to re-sign with my GPG key))
+           letters       (GitHub pull request backup; see LETTER FORMAT below)
+           vercel/deploy (copy of Vercel deployment logs (incomprehensive))
+
+  This is the code monorepo.  Contribute to the project to the
+  repository owned by 'SDC-Fall-2025'.  The one that starts
+  with 'eyzmeng' is MY fork!  I keep it for my own record since
+  (to my horror) it is very easy to lose access to a repository
+  owned by an organization (just like how Microsoft manages your
+  OneNote).  You can read about how I *almost* lost it here:
+
+    <https://list.rapidcow.org/inbox/wisc-sdc-fa25-team/1760829070.503598.0e29f779bf246@e.rapidcow.org/>
+     (Quote: "Right now I don't my admin privilege due to me
+       carelessly playing with the repository Settings..." --
+       As it turns out I was able to remove my Admin role
+       without any pop-up warning or confirmation whatsoever.)
+  
+    <https://discord.com/channels/1197375935033389087/1197380972254085161/1429230434243579904>
+     (SDC Discord server, #help channel)
+
+     eyzmeng/code-wisc-sdc-fa25-team-club-radar
+        head refs:
+           test/vercel
+           ship/vercel
+
+  For Vercel deployment because it was unhappy when I.
+  'test/vercel' is for development deployment and 'ship/vercel'
+
+     eyzmeng/site-wisc-sdc-fa25-team
+        head refs:
+           OUR
+
+  The sole branch 'OUR' is an editable downstream branch for our INTERNAL
+  team website <https://rapidcow.github.io/site-wisc-sdc-fa25-team/>.
+  Read <rapidcow.github.io/site-wisc-sdc-fa25-team/usage/> (site/usage.md)
+  for how to use it.
+
+     rapidcow/site-wisc-sdc-fa25-team
+       head refs:
+          sync/edit
+          gh-pages
+          mod/cgi-bin
+          icmp/htdocs    (TODO)
+       note refs:
+          commits
+
+  Every time the downstream repository (the one I just explained above)
+  has been updated and triggers the GitHub "push" webhook, sync/edit is
+  git-merge(1)'d using -X theirs with the commit message.  The commit
+  message contains at minimum the header "Submitted-At", which is the
+  time at which the Webhook was triggered.  This synchronized branch is
+  then partially merged into gh-pages according to the informal rules
+  outlined in site/usage.  Every push to this branch triggers the GitHub
+  Action which ultimately deploys the site to github.io.
+
+  For anyone who wishes to deploy the site on their own, checkout the
+  gh-pages branch and read site/INSTALL:
+    <https://github.com/rapidcow/site-wisc-sdc-fa25-team/blob/gh-pages/site/INSTALL>
+  You will need Ruby and bundler for this.
+
+  mod/cgi-bin contains the source code of the webhook.  Specically, at
+    <https://rapidcow.github.io/cgi-bin/request-pull.cgi>
+  The commits notes ref is identical to the one above.
+
+  icmp/htdocs is the source code of
+      <https://team.endfindme.com/wisc/sdc/fa-25/public/>
+  which will exist for at least as long as 
+      <https://clubradar.endfindme.com/>
+  remains in service.  (icmp is a pun on Internet Control Message Protocol
+  (RFC 792), which is used for ping(1) and traceroute(1) (though apparently
+  not exclusively, see <https://netmeister.org/blog/cs-falsehoods.html> #82?)
+
+     rapidcow/list-wisc-sdc-fa25-team
+       head refs:
+          master
+
+  This is a complete copy of the mailing list archived at list.rapidcow.org
+  in public inbox v1 format.  In fact, it IS the mailing list database, minus
+  xapian and all the stuff index.  In the (unfortunate) event that the site
+  goes down, all emails will remain available here.
+
+  See public-inbox-v1-format(5) for a description of the database format:
+    <https://public-inbox.org/public-inbox-v1-format.txt>
+
+
+My CANONICAL MAPPING of the head refs (branches) is as follows:
+
+     SDC-Fall-2025/Team-17-Club-Radar
+     eyzmeng/code-wisc-sdc-fa25-team
+          master        -> src/master
+          bip/*         -> src/bip/*
+     eyzmeng/site-wisc-sdc-fa25-team
+          OUR           -> edit
+     rapidcow/site-wisc-sdc-fa25-team
+          sync/edit     -> sync/edit (ditto)
+          gh-pages      -> gh-pages (ditto)
+          mod/cgi-bin   -> mod/cgi-bin (ditto)
+          icmp/htdocs   -> icmp/htdocs (ditto)
+     rapidcow/list-wisc-sdc-fa25-team
+          master        -> list/master
+
+
+Regarding the LETTER FORMAT, the following headers have been in use
+since Pull Request #1.  All dates are standardized in RFC 2822 format,
+with precision in integral seconds, and in parentheticals, the value
+in their original forms is stored.  The schema of canonical URIs is
+normalized by removing the "s" for "secure" from SSL/TLS protocols
+(e.g. ftps, https).  Long lines are visually broken up per RFC 8792.
+Everything is in UTF-8 with lines delimited by the Unix line feed
+(LF, 0x0a, \012), except possibly the payload (see Content-Type)
+unless stated otherwise.
+
+    Submitted-At
+       Date at which the Webhook was delivered.
+       (This value is originally given as Unix epoch.)
+    Created-At
+       The string attribute: .pull_request.created_at
+       (This value is originally given as Unix epoch.)
+    Updated-At
+       The string attribute: .pull_request.updated_at
+    Base-Uri,Head-Uri
+       The string attribute: .pull_request.{base,head}.repo.clone_url.
+         (The URI is canonicalized according to the rule above.)
+    Base-Ref,Head-Ref
+       The string attribute: .pull_request.base.ref, prepended with "refs/heads/".
+    Base-Oid,Head-Oid
+       The string attribute: .pull_request.base.sha
+    Subject
+       The string attribute: .pull_request.title
+    Content-Type
+       Header borrowed from RFC 2046.  This will continue be the constant
+       'text/markdown; charset="UTF-8"', as long as GitHub continues to use
+       GitHub-flavored Markdown for their pull requests.
+
+       [[[ Aside: ... which is the same reason why I stay the fuck away
+           from it -- the fact that it assumes EVERYTHING is marked up,
+           and compliant with their little Markdown language.  Something
+           as fundamental as unified-diff PATCHES is rendered completely
+           useless under their ostentatious Markdown processor:
+
+           <https://github.com/tmux/tmux/issues/530#issuecomment-247430269>
+
+           Read, for example the (opinionated) take:
+
+           <https://github.com/torvalds/linux/pull/17#issuecomment-5661185>
+
+           I think GitHub should at least respect the Content-Type header
+           of the email it receives from a Pull Request / Issue comment
+           instead of just assuming it is all markdown.
+        ]]]
+
+       is the accepted Internet media type (MIME type) of John Gruber
+       (with help from Aaron Swarz)'s Markdown since RFC 7763.  (I guess
+        Gruber wouldn't be happy if I credited Aaron as the "co-creator",
+        well...   (Want to learn about the whole ordeal about the Markdown
+        trademark history?  Me neither!  But here's that for reference
+        anyways.
+
+         <https://daringfireball.net/projects/markdown/#acknowledgements>   (excerpt:
+            Aaron Swartz [1] deserves a tremendous amount of credit for his
+            feedback on the design of Markdown’s formatting syntax. Markdown is
+            much better thanks to Aaron’s ideas, feedback, and testing. Also,
+            Aaron’s html2text is a very handy (and free) utility for turning
+            HTML into Markdown-formatted plain text.
+
+            [1]: https://aaronsw.com
+          )
+
+         <https://onemanandhisblog.com/2014/09/markdown-commonmark-open-source-controversy/>
+           <https://twitter.com/gruber/status/509042850483687424>  (excerpt:
+             @adders A niggle: I am Markdown’s sole creator, not co-creator. I assume,
+             you’re thinking of Aaron Swartz, whose feedback was instrumental…
+           )
+         <https://crossword.fm/s09/e13/>  (excerpt:
+            Luke:
+            But I’m curious about the genesis, you know, like, is this like a,
+            is this like a weekend project that you’re like, “wouldn’t it be
+            cool if…”, or is it a long term?
+            
+            John:
+            No, well, hmm.
+            
+            So basically the timeline - and, again, I don’t want to be a
+            downer, and there’s this whole sort of sidetrack thing where it’s
+            like, that actually Aaron [Swartz] was the co-creator of Markdown,
+            which is not true. But he was the one beta tester of Markdown who
+            got it right from the start and was the one who gave me the best
+            and most feedback. He was effectively, you know, boiled down to me
+            making it, thinking I’ve got something here. And Aaron being the
+            beta tester who was like, “Yeah, you’ve got something here. Keep
+            going. You know, you’re almost done.”
+         )
+
+         In 2014 people tried to standardize Markdown as it had made its
+         way into many, MANY platforms -- from GitHub to Reddit and all.
+         That's basically the story of CommonMark <https://commonmark.org/>.
+          ... except it didn't start there.
+         (I am not going to quote these; this is going to take me ages....)
+           <https://blog.codinghorror.com/standard-flavored-markdown/>
+             <https://blog.codinghorror.com/standard-markdown-is-now-common-markdown/>
+       )
+    Content-Length
+       Header borrowed from RFC 2046.
+    Content-Digest
+       Header borrowed from RFC 9530, which notably obsoletes the Digest header
+       in RFC 3230, and diverges in that the digest is now embraced with colons.
+       An example of this is the pull request message at bip/club-radar:
+
+     sha=:uKP/7ePQii2k5k4dTtxODwGuSOk=:,\
+     sha-256=:tKbD5V5DOLYZ/eKu8Ceh38lmsoBEGewrQY0QgRR/3wg=:,\
+     sha-384=:5IlwLaRsIVVKIxcuucteqSkIBZD4RVDHQDG4AajDvlLKyfZSNcqsvxysgAxckBWS:,\
+     sha-512=:eCJ+ZgS433Ih1dCAfXRklyQusIxEHa4OwcpOgBBiUmLe/FIbcqTTCuhObwPZ51LwFzbvac/f6qbgk3E+UsJ2wA==:
+
+     These can be generated running:
+
+         git notes --ref=letters show bip/club-radar |
+         perl -012 -ne 'print unless 1 .. /^$/' |
+         openssl dgst <METHOD> -binary | base64
+
+     where <METHOD> is replaced with:
+
+         -sha1       for sha
+         -sha256     for sha-256
+         -sha384     for sha-384
+         -sha512     for sha-512
+
+The payload is the string attribute: .pull_request.body.
+
+As for the commit object itself, the author date should be consistent
+with the date of submission with the time zone offset *EXPRESSLY* set
+to -0000 according to the RFC 2822 convention of region-independent
+time representation.  The author identifier should *ALWAYS* be
+    GitHub <noreply@github.com>
+for GitHub Webhook-triggered edits.
+
+You may have observed that the GitHub pull request URL and mailing list
+Message-ID are starkly missing.  This is because (1) pull requests in this
+model are merely proposals that are not specifically tied to any URI/URL
+(2) I don't need it as they live in my own refs/pulls/* namespace anyways :)
+
+The goal is to make this Git notes (which is a blob) as canonicalized
+as possible.  Pull request numbers are finicky as those are IDs not
+managed by me; and neither are Message-IDs since, even though I am super
+smart and very mindful about my generation of Message-IDs under my two
+namespaces "e.rapidcow.org" and "x.rapidcow.org", most people are not.
+And I am not going to put up with some <SJ0PR06MB716154E75B1B98ED77DC672AFD03A@SJ0PR06MB7161.namprd06.prod.outlook.com>
+if people aren't even going to see them most of the time.  Anyways,
+they are kept separately in refs/notes/amlog so I could update them
+independently (also because that is what Junio, the revered Git
+maintainer, uses to maintain references to the original email from
+which the patch was submitted.)
+
+The headers in the sync/edit branch follows a similar format
+(in particular, the Submitted-At header is essentially identical
+to this one) but I'm not formally documenting it this time since
+it is for personal bookkeeping anyways rather than a complete
+backup. :)
