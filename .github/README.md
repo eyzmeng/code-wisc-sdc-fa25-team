@@ -2,11 +2,11 @@ This project has been abandoned on 2025 December 11.
 Vercel builds will be destroyed by the end of this year.
 
 After that, all refs will be uploaded to this repository,
-this repository will be archived, while all other repositories
-will be deleted.  [**This includes the club edit site.**]
-
-There will be no notices given.  I will do this as soon as
-I am available.
+this repository will be effectively archived (unless I want
+to update it, or if someone from my team or the club cares
+enough to spoil it), most other repositories are archived
+(i.e. read-only), and mirrors/deployments will be **deleted**
+(after I save their deployment logs that is).
 
 
 # Club Radar
