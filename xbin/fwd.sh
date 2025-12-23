@@ -1,2 +1,2 @@
 #!/bin/sh
-exec xbin/smx.pl "$@" -- .
+exec ~/tree/utils/store-meta "$@" -- .
