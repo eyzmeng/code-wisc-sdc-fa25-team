@@ -2,3 +2,9 @@
 	repositoryformatversion = 0
 	filemode = true
 	bare = true
+[gitweb]
+	# Some scummy GitWebs (notably GitHub) just refuses
+	# to acknowledge my identity when it's an mDNS name.
+	# ...can't fight with that.  But at least make some effort
+	# to hide my name from dumb crawlers with no VCS-awareness.
+	commit-email = ethan@rapidcow.org
