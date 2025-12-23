@@ -12,7 +12,6 @@ e4474ab29b438568ac6e35e65be709edf253f511	refs/heads/sync/edit
 4af4faeb683046217928e1106d20a8e98bae5e5a	refs/heads/test/vercel
 946c52ca350c1ce9b21589b799147f48bc928c4a	refs/logs/@RCs-T480s.local/0/refs/remotes/github.com/SDC-Fall-2025/Team-17.git/master
 263db3bca1587024d8b8b289487ab02843263243	refs/logs/@RCs-T480s.local/0/refs/remotes/github.com/eyzmeng/code-wisc-sdc-fa25-team.git/master
-19656f48b841eebfd8a3e54d70b0bf4a633fffa5	refs/mirrors/codeberg.org/rapidcow/code-wisc-sdc-fa25-team.git/refs/info/view
 4fa343972903c30d8b994d59e0921eba4b0cdb61	refs/mirrors/codeberg.org/rapidcow/code-wisc-sdc-fa25-team.git/refs/notes/amlog
 f82ae9055b5be056a65065a9bd660a896ddfe7ac	refs/mirrors/codeberg.org/rapidcow/code-wisc-sdc-fa25-team.git/refs/notes/commits
 8771d1fc9c7fdd408e94888ed1b0e309a9bd0a46	refs/mirrors/codeberg.org/rapidcow/code-wisc-sdc-fa25-team.git/refs/notes/letters
@@ -21,7 +20,6 @@ a3dfcac9b8a90ebf0e394864c8e8edc8485e62ee	refs/mirrors/codeberg.org/rapidcow/code
 cafa8f4849cb6ee1763138254ee5f203a30955c5	refs/mirrors/codeberg.org/rapidcow/code-wisc-sdc-fa25-team.git/refs/pulls/github.com/SDC-Fall-2025/Team-17.git/1/v2/head
 8de52d48cb2171d0902e1ec2d330cb56337c9bc0	refs/mirrors/codeberg.org/rapidcow/code-wisc-sdc-fa25-team.git/refs/pulls/github.com/SDC-Fall-2025/Team-17.git/2/v1/head
 5b42477ba7cf2715295309a3fa293fc7cad2c570	refs/mirrors/codeberg.org/rapidcow/site-wisc-sdc-fa25-team.git/refs/notes/commits
-398253ce0ed95cce5c4dae957728569abb07796f	refs/mirrors/github.com/SDC-Fall-2025/Team-17.git/refs/info/view
 4fa343972903c30d8b994d59e0921eba4b0cdb61	refs/mirrors/github.com/SDC-Fall-2025/Team-17.git/refs/notes/amlog
 f82ae9055b5be056a65065a9bd660a896ddfe7ac	refs/mirrors/github.com/SDC-Fall-2025/Team-17.git/refs/notes/commits
 8771d1fc9c7fdd408e94888ed1b0e309a9bd0a46	refs/mirrors/github.com/SDC-Fall-2025/Team-17.git/refs/notes/letters
@@ -30,10 +28,8 @@ cafa8f4849cb6ee1763138254ee5f203a30955c5	refs/mirrors/github.com/SDC-Fall-2025/T
 a3dfcac9b8a90ebf0e394864c8e8edc8485e62ee	refs/mirrors/github.com/SDC-Fall-2025/Team-17.git/refs/pulls/github.com/SDC-Fall-2025/Team-17.git/1/v1/head
 cafa8f4849cb6ee1763138254ee5f203a30955c5	refs/mirrors/github.com/SDC-Fall-2025/Team-17.git/refs/pulls/github.com/SDC-Fall-2025/Team-17.git/1/v2/head
 8de52d48cb2171d0902e1ec2d330cb56337c9bc0	refs/mirrors/github.com/SDC-Fall-2025/Team-17.git/refs/pulls/github.com/SDC-Fall-2025/Team-17.git/2/v1/head
-19656f48b841eebfd8a3e54d70b0bf4a633fffa5	refs/mirrors/github.com/eyzmeng/code-wisc-sdc-fa25-team-club-radar.git/refs/info/view
 5b42477ba7cf2715295309a3fa293fc7cad2c570	refs/mirrors/github.com/eyzmeng/code-wisc-sdc-fa25-team-club-radar.git/refs/notes/commits
 621ffa6f8bea282418c039f178b3b22512d2a43d	refs/mirrors/github.com/eyzmeng/code-wisc-sdc-fa25-team-club-radar.git/refs/notes/vercel/deploy
-398253ce0ed95cce5c4dae957728569abb07796f	refs/mirrors/github.com/eyzmeng/code-wisc-sdc-fa25-team.git/refs/info/view
 4fa343972903c30d8b994d59e0921eba4b0cdb61	refs/mirrors/github.com/eyzmeng/code-wisc-sdc-fa25-team.git/refs/notes/amlog
 f82ae9055b5be056a65065a9bd660a896ddfe7ac	refs/mirrors/github.com/eyzmeng/code-wisc-sdc-fa25-team.git/refs/notes/commits
 8771d1fc9c7fdd408e94888ed1b0e309a9bd0a46	refs/mirrors/github.com/eyzmeng/code-wisc-sdc-fa25-team.git/refs/notes/letters
