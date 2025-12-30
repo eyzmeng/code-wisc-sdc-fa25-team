@@ -8,130 +8,59 @@
 *  (______)_/                                   *
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-[[ This FILE is mirrored from `site/guide/hacker/infra.txt'.
-   Remarks about where they live on GitHub are irrelevant. ]]
+[[ This FILE supercedes `site/guide/hacker/infra.txt'. ]]
 
-All repositories live on github.com.
-(prepend https:// for HTTP access and git: for SSH access.)
+This is a Git repository. <https://git-scm.com/>
 
-Jargon aside: "head refs" are what people typically call branches.
-"note refs" are Git notes refs that live inside "refs/notes/*".
+You can git-clone(1) us from the 'net at the following locations:
 
-     SDC-Fall-2025/Team-17-Club-Radar
-     eyzmeng/code-wisc-sdc-fa25-team
-        head refs:
-           master        (development branch)
-           bip/*         (Branches of Interest-Worthy Project)
-                          [[P.S.: actually secretly named after
-                                  GibThom's sidekick named Bip]]
-        note refs:
-           amlog         (Message-Id of the final pull request
-                          revision this patch was merged from.)
-           commits       (my personal notes dump for anything that i
-                          would put in the body of a commit message
-                          if GitHub weren't such an annoying freak
-                           (also for when --amend'ing a commit that
-                            i don't want to re-sign with my GPG key))
-           letters       (GitHub pull request backup; see LETTER FORMAT below)
-           vercel/deploy (copy of Vercel deployment logs (incomprehensive))
+    https://github.com/SDC-Fall-2025/Team-17.git
+       (public master repository)
+    https://github.com/eyzmeng/code-wisc-sdc-fa25-team.git
+       (backup/mirror master repository, in case the org does anything shady)
+    https://github.com/rapidcow/site-wisc-sdc-fa25-team.git
+       (github pages deployment)
 
-  This is the code monorepo.  Contribute to the project to the
-  repository owned by 'SDC-Fall-2025'.  The one that starts
-  with 'eyzmeng' is MY fork!  I keep it for my own record since
-  (to my horror) it is very easy to lose access to a repository
-  owned by an organization (just like how Microsoft manages your
-  OneNote).  You can read about how I *almost* lost it here:
+The following locations are obsolete; fetch them from one of
+the master repositories.
 
-    <https://list.rapidcow.org/inbox/wisc-sdc-fa25-team/1760829070.503598.0e29f779bf246@e.rapidcow.org/>
-     (Quote: "Right now I don't my admin privilege due to me
-       carelessly playing with the repository Settings..." --
-       As it turns out I was able to remove my Admin role
-       without any pop-up warning or confirmation whatsoever.)
-  
-    <https://discord.com/channels/1197375935033389087/1197380972254085161/1429230434243579904>
-     (SDC Discord server, #help channel)
+    https://github.com/eyzmeng/site-wisc-sdc-fa25-team.git
+       (to retrieve refs/heads/OUR, fetch refs/heads/edit)
+    https://github.com/rapidcow/list-wisc-sdc-fa25-team.git
+       (to retrieve refs/heads/*, fetch refs/heads/list/*)
+    https://github.com/eyzmeng/code-wisc-sdc-fa25-team-club-radar.git
+    https://codeberg.org/rapidcow/site-wisc-sdc-fa25-team.git
+    https://codeberg.org/rapidcow/code-wisc-sdc-fa25-team.git
+       (just fetch the same ref; the name has not changed)
 
-     eyzmeng/code-wisc-sdc-fa25-team-club-radar
-        head refs:
-           test/vercel
-           ship/vercel
+The following is the status and description of every ref in
+every repository.  (Note that "item" is my private copy.)
+Where I mark "x", you should be able to get it there.
+Where I mark "?", you should not be able to get it there.
+Where I mark nothing, it means they are (to my knowledge) gone.
 
-  For Vercel deployment because it was unhappy when I.
-  'test/vercel' is for development deployment and 'ship/vercel'
-
-     eyzmeng/site-wisc-sdc-fa25-team
-        head refs:
-           OUR
-
-  The sole branch 'OUR' is an editable downstream branch for our INTERNAL
-  team website <https://rapidcow.github.io/site-wisc-sdc-fa25-team/>.
-  Read <rapidcow.github.io/site-wisc-sdc-fa25-team/usage/> (site/usage.md)
-  for how to use it.
-
-     rapidcow/site-wisc-sdc-fa25-team
-       head refs:
-          sync/edit
-          gh-pages
-          mod/cgi-bin
-          icmp/htdocs    (TODO)
-       note refs:
-          commits
-
-  Every time the downstream repository (the one I just explained above)
-  has been updated and triggers the GitHub "push" webhook, sync/edit is
-  git-merge(1)'d using -X theirs with the commit message.  The commit
-  message contains at minimum the header "Submitted-At", which is the
-  time at which the Webhook was triggered.  This synchronized branch is
-  then partially merged into gh-pages according to the informal rules
-  outlined in site/usage.  Every push to this branch triggers the GitHub
-  Action which ultimately deploys the site to github.io.
-
-  For anyone who wishes to deploy the site on their own, checkout the
-  gh-pages branch and read site/INSTALL:
-    <https://github.com/rapidcow/site-wisc-sdc-fa25-team/blob/gh-pages/site/INSTALL>
-  You will need Ruby and bundler for this.
-
-  mod/cgi-bin contains the source code of the webhook.  Specically, at
-    <https://rapidcow.github.io/cgi-bin/request-pull.cgi>
-  The commits notes ref is identical to the one above.
-
-  icmp/htdocs is the source code of
-      <https://team.endfindme.com/wisc/sdc/fa-25/public/>
-  which will exist for at least as long as 
-      <https://clubradar.endfindme.com/>
-  remains in service.  (icmp is a pun on Internet Control Message Protocol
-  (RFC 792), which is used for ping(1) and traceroute(1) (though apparently
-  not exclusively, see <https://netmeister.org/blog/cs-falsehoods.html> #82?)
-
-     rapidcow/list-wisc-sdc-fa25-team
-       head refs:
-          master
-
-  This is a complete copy of the mailing list archived at list.rapidcow.org
-  in public inbox v1 format.  In fact, it IS the mailing list database, minus
-  xapian and all the stuff index.  In the (unfortunate) event that the site
-  goes down, all emails will remain available here.
-
-  See public-inbox-v1-format(5) for a description of the database format:
-    <https://public-inbox.org/public-inbox-v1-format.txt>
-
-
-My CANONICAL MAPPING of the head refs (branches) is as follows:
-
-     SDC-Fall-2025/Team-17-Club-Radar
-     eyzmeng/code-wisc-sdc-fa25-team
-          master        -> src/master
-          bip/*         -> src/bip/*
-     eyzmeng/site-wisc-sdc-fa25-team
-          OUR           -> edit
-     rapidcow/site-wisc-sdc-fa25-team
-          sync/edit     -> sync/edit (ditto)
-          gh-pages      -> gh-pages (ditto)
-          mod/cgi-bin   -> mod/cgi-bin (ditto)
-          icmp/htdocs   -> icmp/htdocs (ditto)
-     rapidcow/list-wisc-sdc-fa25-team
-          master        -> list/master
-
+    item xcs/uwisc/sdc/fa-25/team
+    |https://github.com/SDC-Fall-2025/Team-17
+    |(https://github.com/eyzmeng/code-wisc-sdc-fa25-team)
+    ||https://github.com/eyzmeng/code-wisc-sdc-fa25-team
+    |||https://github.com/rapidcow/site-wisc-sdc-fa25-team
+    x    refs/info/self        bare repository information
+    xxx  refs/info/view        public version of info/self
+    xx   refs/heads/master     HEAD branch
+    xx   refs/heads/bip/*      branch* of interest-worthy projects
+    xx   refs/heads/test/vercel  Vercel development deployment
+    xx   refs/heads/ship/vercel  Vercel production deployment
+    xx?  refs/heads/edit       editable downstream (aka 'OUR' branch)
+    xx?  refs/heads/sync/edit  reflog of refs/heads/edit
+    xx   refs/heads/icmp/htdocs  source code of team.endfindme.com
+    xxx  refs/heads/gh-pages   GitHub CI Jekyll deployment
+    xx?  refs/heads/mod/cgi-bin   impl of request-pull.cgi
+    xx   refs/heads/list/master   public inbox v1 archive
+    xx?  refs/notes/
+    refs/notes/amlog           Message-Id as the cause of merge
+    refs/notes/commits         Commit notes
+    refs/notes/letters         Pull Requests (see "LETTER FORMAT")
+    refs/notes/vercel/deploy   Vercel deployment log
 
 Regarding the LETTER FORMAT, the following headers have been in use
 since Pull Request #1.  All dates are standardized in RFC 2822 format,
@@ -182,10 +111,10 @@ unless stated otherwise.
            instead of just assuming it is all markdown.
         ]]]
 
-       is the accepted Internet media type (MIME type) of John Gruber
-       (with help from Aaron Swarz)'s Markdown since RFC 7763.  (I guess
-        Gruber wouldn't be happy if I credited Aaron as the "co-creator",
-        well...   (Want to learn about the whole ordeal about the Markdown
+        text/markdown is the accepted Internet media type (MIME type) of
+        John Gruber (with help from Aaron Swarz)'s Markdown since RFC 7763.
+       (I guess Gruber wouldn't be happy if I credited Aaron as the "co-creator",
+        well... (Want to learn about the whole ordeal about the Markdown
         trademark history?  Me neither!  But here's that for reference
         anyways.
 
