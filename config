@@ -8,3 +8,5 @@
 	permission = r
 [shell "ethan@rapidcow.org"]
 	permission = rwsx
+[shell "rapidcow@RCs-T480s.tails.ethan.yizz.me"]
+	permission = rwsx
