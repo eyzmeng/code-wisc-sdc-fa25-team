@@ -2,3 +2,9 @@
 	repositoryformatversion = 0
 	filemode = true
 	bare = true
+[shell]
+	permission = r
+[shell "guest@rapidcow.org"]
+	permission = r
+[shell "ethan@rapidcow.org"]
+	permission = rwsx
