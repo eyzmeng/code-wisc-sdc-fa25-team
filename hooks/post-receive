@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ~/bin/post-receive --ref refs/info/rpi-self
+exec ~/bin/post-receive --ref refs/info/rdk-self
