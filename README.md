@@ -1,6 +1,5 @@
 This project has been abandoned on 2025 December 11.
-Vercel builds will be destroyed by the start of the
-Spring term.
+Vercel builds will be destroyed by **this weekend**.
 
 After that, all refs will be uploaded to this repository,
 this repository will be effectively archived (unless I want
