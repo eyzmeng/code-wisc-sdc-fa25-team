@@ -1,0 +1,313 @@
+#!/usr/bin/env perl
+# Per git manual:
+#
+# GIT-RECEIVE-PACK(1)
+# POST-RECEIVE HOOK
+# After all refs were updated (or attempted to be updated), if any ref
+# update was successful, and if $GIT_DIR/hooks/post-receive file exists
+# and is executable, it will be invoked once with no parameters.  The
+# standard input of the hook will be one line for each successfully
+# updated ref:
+# 
+#     sha1-old SP sha1-new SP refname LF
+# 
+# The refname value is relative to $GIT_DIR; e.g. for the master head
+# this is "refs/heads/master". The two sha1 values before each refname
+# are the object names for the refname before and after the update.
+# Refs that were created will have sha1-old equal to 0{40}, while
+# refs that were deleted will have sha1-new equal to 0{40}, otherwise
+# sha1-old and sha1-new should be valid objects in the repository.
+
+use strict;
+use warnings;
+
+use File::Spec;
+use IPC::Open2;
+use Socket qw(:crlf);
+use User::pwent;
+
+sub uniq;
+sub auth;
+sub user;
+
+# Git operations
+sub delta (\@);
+sub hash;
+sub deref;
+
+# main
+use Getopt::Long qw(GetOptions);
+Getopt::Long::Configure(qw( gnu_compat bundling permute no_getopt_compat ));
+GetOptions(
+	'bin=s' => \my $bin,
+	'ref=s' => \my $ref,
+) or die "usage: $0 [--bin PATH] [--ref NAME]\n";
+my $Bin = $bin || File::Spec->catfile($ENV{'HOME'}, 'tree', 'utils', 'store-meta');
+my $Ref = $ref || 'refs/info/self';
+
+defined $ENV{GIT_DIR} or die "define GIT_DIR\n";
+chdir $ENV{GIT_DIR} or die "chdir GIT_DIR: $!\n";
+
+my ($user_name, $user_mail) = user;
+@ENV{qw(GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL)} = ($user_name, $user_mail);
+@ENV{qw(GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL)} = ($user_name, $user_mail);
+# In the event this takes a long time to diff, hijack GIT_AUTHOR_DATE now
+chomp ($ENV{GIT_AUTHOR_DATE} = `date +'@%s %z'`);
+
+# the empty tree used to compare newborn and deceased branches
+my $EMPTY = hash tree => '';
+my (@message, @trailer);
+
+unless (exists $ENV{'SSH_CONNECTION_HOST'} && exists $ENV{'SSH_CONNECTION_FROM'}) {
+	push @message, "Receive pack via local transport";
+} else {
+	push @message, "Receive pack via ssh transport";
+	# Git shell should have set these, so just split...
+	@ENV{qw(GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL)} = @ENV{qw(REMOTE_NAME REMOTE_USER)};
+	push @trailer, "Submitted-by: $ENV{REMOTE_IDENT}" if $ENV{'REMOTE_IDENT'};
+	push @trailer, "From: $ENV{SSH_CONNECTION_FROM}";
+	push @trailer, "Host: $ENV{SSH_CONNECTION_HOST}";
+}
+
+if ($ENV{'UPDATE_STATUS'}) {
+	$message[0] = $ENV{'UPDATE_STATUS'};
+}
+
+my (@create, @update, @delete);
+foreach (<STDIN>) {
+	# show our work to git client
+	chomp;
+	my ($oval, $nval, $ref) = split / /;
+	if ($ref =~ m!^refs/info/!) {
+		# store-meta won't index it; we probably
+		# shouldn't report its status change, either
+		next;
+	}
+	my $sign = ($oval !~ /[^0]/) - ($nval !~ /[^0]/);
+
+	if ($sign == 1) {
+		push @create, [$ref, $oval, $nval];
+	}
+	elsif ($sign == 0) {
+		push @update, [$ref, $oval, $nval];
+	}
+	elsif ($sign == -1) {
+		push @delete, [$ref, $oval, $nval];
+	}
+}
+
+# If the only refs updated were meta-refs, just keep
+# them the way they are so I can sleep soundly :)
+exit unless @create || @update || @delete;
+
+foreach (\@create, \@update, \@delete) {
+	@$_ = sort { $a->[0] cmp $b->[0] } @$_;
+}
+
+my $Prefix = " " x 2;
+push @message, join "\n", (
+	"updated:", delta @update
+) if @update;
+push @message, join "\n", (
+	"created:", delta @create
+) if @create;
+push @message, join "\n", (
+	"deleted:", delta @delete
+) if @delete;
+
+exec $Bin, '-s', map (( -m => $_ ), @message),
+	@trailer ? ( -m => join ("\n", @trailer) ) : (),
+	'.' => $Ref;
+die "exec error: $!\n";
+
+sub delta (\@)
+{
+	my $array = shift;
+	my @out;
+	foreach (@$array) {
+		my ($ref, $oval, $nval) = @$_;
+
+		# First, get the abbreviated SHAs
+		# (this is universal; every one gets it)
+		chomp (my $oshr = xpipe(qw(git rev-parse --short), $oval));
+		chomp (my $nshr = xpipe(qw(git rev-parse --short), $nval));
+
+		# Next, compare trees (only for commits)
+		# refs/info and refs/logs are our extensions
+		# Mirrored refs are not guaranteed commits on
+		# their own, but we'd still be able to tell
+		# from the namespace within them -- same for
+		# Git's native namespace refs.
+		# and if somehow HEAD isn't a symbolic ref
+		# (which it should be, but what do i know...)
+		# we track that too.
+		my ($count, $diffs);
+		if (
+			$ref =~ m!(^|/)refs/(heads|remotes|notes|info|logs|)/!n
+			|| $ref =~ m!(^|/)HEAD$!
+		) { eval {
+			# This bit comes from utils/prep-commit
+			my ($oldt, $newt);
+			my ($a, $b);
+			if ($oval !~ /[^0]/) {
+				# no memory (create)
+				chomp ($b = xpipe(qw(git rev-list --count), $nval));
+				$oldt = $EMPTY;
+				$newt = deref tree => $nval;
+			}
+			elsif ($nval !~ /[^0]/) {
+				# no future (delete)
+				chomp ($a = xpipe(qw(git rev-list --count), $oval));
+				$oldt = deref tree => $oval;
+				$newt = $EMPTY;
+			}
+			else {
+				# in-between (update)
+				chomp (my $ab = xpipe(
+					qw(git rev-list --count --left-right),
+					"$oval...$nval"));
+				($a, $b) = split /\t/, $ab;
+				$oldt = deref tree => $oval;
+				$newt = deref tree => $nval;
+			}
+			$count = !$a ? "+$b" : !$b ? "-$a" : "-$a+$b";
+
+			if ($oldt eq $newt) {
+				$diffs = '(identical trees)';
+			}
+			else {
+				$diffs = xpipe(qw(git diff --shortstat), "$oldt..$newt");
+				$diffs =~ s/^\s+|\s+$//g if $diffs;
+				# Trees do not have a canonical representation; git is not
+				# known to create empty trees in intermediary levels, but
+				# other times we certainly can.  git-diff(1) treats them
+				# the same nonetheless, so that is a possible insight that
+				# they're identical minus the precense of empty trees
+				# (or lack thereof).
+				$diffs ||= '(almost-identical trees)';
+			};
+
+			1;
+		} or do {
+			# all-or-nothing
+			undef $count;
+			undef $diffs;
+		}; }
+
+		# We always use two-dots because that's how we diff them.
+		# (Unless receive-pack is willing to tell us who is the
+		# forced update, in which case we can precede the refs
+		# with a "+" flag, similar to how git-push(1) does it?)
+		push @out, "  $ref $oshr..$nshr" . (defined $count ? " ($count)" : '');
+		push @out, "   $diffs" if $diffs;
+	}
+	return @out;
+}
+
+sub uniq
+{
+	my %seen;
+	my @uniq;
+	foreach (@_) {
+		push @uniq, $_ unless $seen{$_}++;
+	}
+	@uniq;
+}
+
+# Stolen from reslog.pl
+sub hash
+{
+	local ($., $/);
+	$/ = LF;
+	my ($type, $content) = @_;
+	my ($rdr, $wtr);
+	if ($] < 5.006) {
+		require Symbol;
+		$rdr = Symbol::gensym();
+		$wtr = Symbol::gensym();
+	}
+	my $pid = open2($rdr, $wtr, qw(git hash-object -t), $type, qw(-w --stdin));
+	print {$wtr} $content;
+	close $wtr;
+	my $hash = <$rdr>;
+	waitpid($pid, 0);
+	$? == 0 or die "hash-object: died: wstat $? (code @{[$? >> 8]})\n";
+	defined $hash or die "hash-object returned nothing";
+	chomp $hash;
+	return $hash
+}
+
+sub deref
+{
+	my ($type, $ish) = @_;
+	chomp (my $oid = xpipe(qw(git rev-parse --verify), "$ish^{$type}"));
+	return $oid;
+}
+
+# This is qx_git in reslog.pl, modified so that all errors are fatal...
+sub xpipe
+{
+	local ($.);
+	my ($ret, @ret);
+	my $exe = shift;
+	my ($git);
+	if ($] < 5.006) {
+		require Symbol;
+		$git = Symbol::gensym();
+	}
+	open($git, '-|', $exe, @_) or die "$exe: fork error: $!\n";
+	{
+		local $! = 0;
+		if (wantarray) { @ret = <$git> } else { $ret = <$git> }
+		$! and die "$exe: read error at line $.: $!\n";
+	}
+	unless (close($git)) {
+		die "$exe error: wstat $? (code @{[$? >> 8]})\n";
+	}
+	wantarray ? @ret : $ret;
+}
+
+sub user
+{
+	my $username = $ENV{USER};
+	# Infer username from Real UID (assuming /etc/passwd exists)
+	$username ||= getpwuid($<)->name;
+	$username or die "export USER\n";
+
+	my $hostname = $ENV{HOSTNAME};
+	$hostname ||= hostname();  # try harder
+	my $email = $hostname ? (
+		sprintf ('%s@%s', $username, $hostname)
+	) : do {
+		my $out = `git config --global user.email`;
+		$out or die <<NOADDR;
+Error: I cannot construct an email address with your username
+Error: ($username) alone.  You either configure one using Git:
+Error:
+Error:     git config --global <EMAIL>
+Error:
+Error: ... or export HOSTNAME.
+NOADDR
+		chomp $out;
+		$out;
+	};
+
+	my $user = getpwnam($username);
+	my $name = do {
+		my $out = `git config --global user.name`;
+		$out =~ s/^\s+|\s+$// if $out;
+		$out;
+	} || ($user->gecos ? do {
+		my $gecko = $user->gecos;
+		my $before = index ',', $gecko;
+		substr($gecko, 0, $before)
+	} : $username);  # (fallback)
+
+	($name, $email);
+}
+
+sub hostname
+{
+	require Sys::Hostname;
+	eval { Sys::Hostname::hostname() };
+}

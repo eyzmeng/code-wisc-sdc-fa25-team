@@ -20,6 +20,7 @@ You can git-clone(1) us from the 'net at the following locations:
        (backup/mirror master repository, in case the org does anything shady)
     https://github.com/rapidcow/site-wisc-sdc-fa25-team.git
        (github pages deployment)
+    https://git.rdkw.org/pub/xcs/uwisc/sdc/fa-25/team.git
 
 The following locations are obsolete; fetch them from one of
 the master repositories.
