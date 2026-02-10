@@ -2,13 +2,17 @@
   import search from '$lib/sub/search';
   import Console from '$lib/debug/Console.svelte';
 
-  var query = '';
-  var selectedTags = [];
-  var memberFee = '';
-  var registration = '';
-  var activeMembers = '';
-  var clubAge = '';
-  var audience = '';
+  var query = $state(null);
+  /*
+   * I actually don't use any of the following values,
+   * so neither do I really care about their defaults...
+   */
+  var selectedTags = $state([]);
+  var memberFee = $state('');
+  var registration = $state('');
+  var activeMembers = $state('');
+  var clubAge = $state('');
+  var audience = $state('');
 
   const tags = ['Sports', 'Music', 'Art', 'STEM', 'Cultural'];
   const toggleTag = (tag) => {
@@ -31,7 +35,7 @@
   };
 </script>
 
-<div class="max-w-lg m-auto space-y-6">
+<form on:submit|preventDefault={submit} class="max-w-lg m-auto space-y-6">
   <div>
     <label for="query" class="font-semibold block mb-1">Search</label>
     <input
@@ -121,10 +125,10 @@
   </div>
 
   <!-- Submit -->
-  <form on:submit|preventDefault={submit} class="pt-4">
+  <div class="pt-4">
     <button type="submit" class="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700">
       Search
     </button>
-  </form>
-</div>
+  </div>
+</form>
 <Console />
